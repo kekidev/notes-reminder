@@ -1,0 +1,54 @@
+name: Glance
+options:
+  bundleIdPrefix: app.glance
+  deploymentTarget:
+    macOS: "26.0"
+packages:
+  Glance:
+    path: .
+targets:
+  Glance:
+    type: application
+    platform: macOS
+    sources: [App/Glance]
+    dependencies:
+      - package: Glance
+        product: GlanceCore
+    info:
+      path: App/Glance/Info.plist
+      properties:
+        CFBundleDisplayName: Glance
+        LSUIElement: true # no Dock icon; the ball is the UI
+        # Xcode copies Resources/Fonts/*.ttf flat into Contents/Resources.
+        ATSApplicationFontsPath: .
+    postBuildScripts:
+      - name: Embed glance-mcp
+        basedOnDependencyAnalysis: false
+        script: |
+          cd "$SRCROOT"
+          CONF=$( [ "$CONFIGURATION" = "Release" ] && echo release || echo debug )
+          xcrun swift build -c "$CONF" --product glance-mcp
+          cp "$(xcrun swift build -c "$CONF" --show-bin-path)/glance-mcp" "$TARGET_BUILD_DIR/$EXECUTABLE_FOLDER_PATH/glance-mcp"
+    settings:
+      base:
+        SWIFT_VERSION: "6.0"
+        SWIFT_APPROACHABLE_CONCURRENCY: YES
+        SWIFT_DEFAULT_ACTOR_ISOLATION: MainActor
+        ENABLE_HARDENED_RUNTIME: YES
+        CODE_SIGN_IDENTITY: "-"
+    scheme:
+      testTargets: [GlanceTests]
+  GlanceTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources: [Tests/GlanceTests]
+    dependencies:
+      - target: Glance
+      - package: Glance
+        product: GlanceCore
+    settings:
+      base:
+        SWIFT_VERSION: "6.0"
+        SWIFT_DEFAULT_ACTOR_ISOLATION: MainActor
+        GENERATE_INFOPLIST_FILE: YES
+        CODE_SIGN_IDENTITY: "-"

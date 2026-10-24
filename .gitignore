@@ -1,0 +1,15 @@
+# The owner's to-do list. Never commit it.
+data/
+
+.build/
+DerivedData/
+*.xcodeproj/
+.swiftpm/
+.DS_Store
+App/Glance/Info.plist
+
+# Local tool state
+.claude/
+
+# Release output
+dist/
