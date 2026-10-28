@@ -36,8 +36,9 @@ Glance is a list you can't lose: a small orb on top of everything that you check
 
 ## Install
 
-1. Download `Glance.dmg` from the [latest release](../../releases/latest) and drag **Glance** into Applications.
-2. The app isn't notarized, so the first time you open it, **right-click Glance → Open → Open**.
+1. **[Download Glance.dmg](../../releases/latest/download/Glance.dmg)**, open it, and drag **Glance** onto the **Applications** folder.
+2. Open Glance from Applications or Launchpad. macOS will say it can't verify the app, because it isn't notarized. Click **Done**, then go to **System Settings → Privacy & Security**, scroll down, and click **Open Anyway** next to Glance. You only do this once.
+   - Or paste this into Terminal instead: `xattr -dr com.apple.quarantine /Applications/Glance.app`
 3. Click the orb in the top-right corner, or press **⌥Space** from anywhere.
 
 Requires macOS 26 (Tahoe) on Apple silicon.

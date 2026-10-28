@@ -18,7 +18,12 @@ rc=0
 [ "$rc" -eq 64 ] || { echo "error: glance-mcp exited $rc, expected 64" >&2; exit 1; }
 echo "glance-mcp exit code: $rc"
 
-hdiutil create -volname Glance -srcfolder dist/Glance.app -ov -format UDZO dist/Glance.dmg >/dev/null
+# The Applications link gives the DMG window its drag-to-install target.
+stage=$(mktemp -d)
+ditto dist/Glance.app "$stage/Glance.app"
+ln -s /Applications "$stage/Applications"
+hdiutil create -volname Glance -srcfolder "$stage" -ov -format UDZO dist/Glance.dmg >/dev/null
+rm -rf "$stage"
 
 echo "App: $PWD/dist/Glance.app"
 echo "DMG: $PWD/dist/Glance.dmg"
